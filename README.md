@@ -1,65 +1,294 @@
-#  ULPF - Universal Log Pre-processing Framework (MVP)
+ ULPF — Universal Log Pre-processing Framework (MVP)
 
-A blazing-fast, real-time log ingestion and parsing engine built for SIEMs. 
-This MVP ingests unstructured raw firewall logs, extracts critical indicators using a custom regex engine, normalizes them into the **OCSF (Open Cybersecurity Schema Framework)** standard, and visualizes the data live using Grafana.
+A blazing-fast, real-time log ingestion and parsing engine built for SIEMs.
 
----
+ULPF ingests unstructured raw firewall logs, extracts critical security indicators using a custom regex engine, normalizes them into the OCSF (Open Cybersecurity Schema Framework) standard, and visualizes the processed data in Grafana.
 
-## ⚙️ Prerequisites (What you need installed)
+🧩 Architecture
 
-To run this project on a brand new machine, you will need:
-1. **[Git](https://git-scm.com/downloads)** - To clone this repository.
-2. **[Go (Golang)](https://go.dev/doc/install)** - To run the backend parsing engine.
-3. **[Grafana](https://grafana.com/grafana/download)** - For the frontend visualization dashboard.
+Raw Firewall Logs
+       │
+       ▼
+┌──────────────────┐
+│   Go Backend     │
+│  Log Ingestion   │
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ Custom Regex     │
+│ Parsing Engine   │
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ OCSF Normalizer  │
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ SQLite Database  │
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│     Grafana      │
+│    Dashboard     │
+└──────────────────┘
 
----
+🛠️ Prerequisites
 
-##  Step-by-Step Setup Guide
+To run this project on a brand-new machine, make sure you have:
 
-### Phase 1: Start the Go Backend
-1. Open your terminal/command prompt and clone this repository:
-   ```bash
-   git clone https://github.com/vebhavsh/ulpf-mvp.git
-   cd ulpf-mvp
-Start the Golang processing server:
+Tool
 
-Bash
+Purpose
+
+Git
+
+Clone the repository
+
+Go (Golang)
+
+Run the backend parsing engine
+
+Grafana
+
+Frontend visualization dashboard
+
+⚙️ Step-by-Step Setup Guide
+
+Phase 1 — Start the Go Backend
+
+1. Clone the repository
+
+Open your terminal / Command Prompt:
+
+git clone https://github.com/vebharsh/ulpf-mvp.git
+cd ulpf-mvp
+
+2. Start the Go server
+
+Run:
+
 go run cmd/server/main.go
-Success! You should see a message saying the server is running on port 8080. The engine will automatically create a local ulpf.db SQLite database in your folder to store the logs safely. Keep this terminal open.
 
-Phase 2: Setup the Grafana Dashboard
-Because Grafana doesn't support SQLite out-of-the-box, we need to add a quick plugin.
+You should see a message similar to:
 
-Open a new terminal and install the SQLite plugin for Grafana:
+Server is running on port 8080
 
-Bash
+The engine will automatically create a local SQLite database:
+
+ulpf.db
+
+Keep this terminal running while using the application.
+
+Phase 2 — Set Up Grafana
+
+Grafana does not support SQLite out-of-the-box, so we use the frser-sqlite-datasource plugin.
+
+1. Install the SQLite plugin
+
+Open a new terminal and run:
+
 grafana-cli plugins install frser-sqlite-datasource
-Restart your Grafana service on your PC so the plugin loads.
 
-Open your browser and go to http://localhost:3000 (Login with default username admin, password admin).
+Restart Grafana after installation so the plugin loads correctly.
 
-Go to Connections > Data Sources > Add data source. Search for SQLite.
+2. Open Grafana
 
-In the path section, provide the absolute path to the ulpf.db file located in your project folder (e.g., C:\Users\YourName\ulpf-mvp\ulpf.db). Click Save & Test.
+Open your browser and visit:
 
-Phase 3: Import the UI
-In Grafana, click the + (Plus) icon in the top right or go to Dashboards > New > Import.
+http://localhost:3000
 
-Upload the ulpf-dashboard.json file provided in this repository.
+Default credentials:
 
-Select your SQLite data source from the dropdown and click Import.
+Username: admin
+Password: admin
 
-🔥 Live Action Demo (How to Test)
-Now that both your backend and frontend are running, let's inject a fake firewall log to see the real-time processing.
+Grafana may ask you to change the default password on first login.
 
-Open a new terminal window.
+3. Add the SQLite data source
 
-Run this cURL command to send a raw log to the Go engine:
+In Grafana:
 
-Bash
-curl -X POST -d "srcip=192.168.9.99 dstip=1.1.1.1 action=deny" http://localhost:8080/ingest
-Open your Grafana dashboard and hit the Refresh button at the top right.
+Connections
+   → Data Sources
+      → Add data source
+         → SQLite
 
-You will instantly see the new log parsed into OCSF JSON format in the data table, and the Action Pie Chart will update dynamically!
+In the Path field, enter the absolute path to the ulpf.db file inside your project folder.
 
-Built for Smart India Hackathon 2026 by Team Hydra 🧠
+Example:
+
+C:\Users\YourName\ulpf-mvp\ulpf.db
+
+Then click:
+
+Save & Test
+
+Phase 3 — Import the Dashboard
+
+In Grafana, click the ➕ (Plus) icon in the top-right.
+
+Select Dashboards → New → Import.
+
+Upload:
+
+ulpf-dashboard.json
+
+Select your SQLite data source from the dropdown.
+
+Click Import.
+
+Your dashboard should now be ready.
+
+🔥 Live Action Demo — How to Test
+
+Once both the Go backend and Grafana dashboard are running, you can inject a fake firewall log and watch the system process it in real time.
+
+1. Open a new terminal
+
+Run:
+
+curl -X POST -d "src=192.168.99.99 dstip=1.1.1.1 action=deny" http://localhost:8080/ingest
+
+2. Refresh Grafana
+
+Open the dashboard and click Refresh.
+
+You should see:
+
+✅ The new firewall log appear in the data table
+
+✅ The log parsed into OCSF JSON
+
+✅ The Action Pie Chart update dynamically
+
+📊 What ULPF Does
+
+ULPF follows a simple processing pipeline:
+
+Ingest → Parse → Normalize → Store → Visualize
+
+1️⃣ Ingest
+
+Receives raw, unstructured firewall logs.
+
+2️⃣ Parse
+
+Uses a custom regex-based parsing engine to extract useful fields such as:
+
+Source IP
+
+Destination IP
+
+Action
+
+Other security indicators
+
+3️⃣ Normalize
+
+Converts the extracted information into the OCSF standard.
+
+4️⃣ Store
+
+Stores the processed events locally in SQLite.
+
+5️⃣ Visualize
+
+Grafana provides a real-time dashboard for monitoring and analysis.
+
+🎯 MVP Highlights
+
+Feature
+
+Description
+
+⚡ Real-Time Ingestion
+
+Processes logs as they arrive
+
+🔎 Custom Regex Engine
+
+Extracts useful indicators from raw logs
+
+🌐 OCSF Normalization
+
+Converts events into a standardized security schema
+
+💾 SQLite Storage
+
+Lightweight local persistence
+
+📊 Grafana Dashboard
+
+Provides live visualization
+
+🧪 Easy Demo
+
+Test the entire pipeline with a single curl request
+
+📁 Project Structure
+
+ulpf-mvp/
+├── cmd/
+│   └── server/
+│       └── main.go
+├── ulpf.db
+├── ulpf-dashboard.json
+└── README.md
+
+The exact project structure may vary as the MVP evolves.
+
+🚀 Quick Start
+
+For experienced users, the entire setup can be summarized as:
+
+# Clone
+git clone https://github.com/vebharsh/ulpf-mvp.git
+cd ulpf-mvp
+
+# Start backend
+go run cmd/server/main.go
+
+# Install Grafana SQLite plugin
+grafana-cli plugins install frser-sqlite-datasource
+
+Then:
+
+Open Grafana → Add SQLite Data Source → Import Dashboard
+
+Test the pipeline:
+
+curl -X POST -d "src=192.168.99.99 dstip=1.1.1.1 action=deny" http://localhost:8080/ingest
+
+🧠 Processing Flow
+
+Firewall Log
+     │
+     ▼
+[ Ingestion API ]
+     │
+     ▼
+[ Regex Parser ]
+     │
+     ▼
+[ OCSF Normalizer ]
+     │
+     ▼
+[ SQLite ]
+     │
+     ▼
+[ Grafana ]
+     │
+     ▼
+Security Visualization
+
+🏆 Built For
+
+Smart India Hackathon 2026
+
+👨‍💻 Team Hydra 🧠
+
+Turning raw security logs into structured, actionable intelligence.
