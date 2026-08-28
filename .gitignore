@@ -1,0 +1,15 @@
+# Database
+*.db
+*.sqlite
+ulpf.db
+
+# Compiled binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+
+# OS specific files
+.DS_Store
