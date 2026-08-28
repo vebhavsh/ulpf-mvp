@@ -1,4 +1,4 @@
-# 🚀 ULPF — Universal Log Pre-processing Framework (MVP)
+#  ULPF — Universal Log Pre-processing Framework (MVP)
 
 > **A blazing-fast, real-time log ingestion and parsing engine built for SIEMs.**
 
@@ -6,7 +6,7 @@ ULPF ingests **unstructured raw firewall logs**, extracts critical security indi
 
 ---
 
-## 🧩 Architecture
+##  Architecture
 
 ```text
 Raw Firewall Logs
@@ -42,7 +42,7 @@ Raw Firewall Logs
 
 ---
 
-## 🛠️ Prerequisites
+##  Prerequisites
 
 To run this project on a brand-new machine, make sure you have:
 
@@ -54,7 +54,7 @@ To run this project on a brand-new machine, make sure you have:
 
 ---
 
-# ⚙️ Step-by-Step Setup Guide
+#  Step-by-Step Setup Guide
 
 ## Phase 1 — Start the Go Backend
 
@@ -166,7 +166,7 @@ Your dashboard should now be ready.
 
 ---
 
-# 🔥 Live Action Demo — How to Test
+#  Live Action Demo — How to Test
 
 Once both the **Go backend** and **Grafana dashboard** are running, you can inject a fake firewall log and watch the system process it in real time.
 
@@ -184,13 +184,13 @@ Open the dashboard and click **Refresh**.
 
 You should see:
 
-- ✅ The new firewall log appear in the data table
-- ✅ The log parsed into **OCSF JSON**
-- ✅ The **Action Pie Chart** update dynamically
+-  The new firewall log appear in the data table
+-  The log parsed into **OCSF JSON**
+-  The **Action Pie Chart** update dynamically
 
 ---
 
-# 📊 What ULPF Does
+#  What ULPF Does
 
 ULPF follows a simple processing pipeline:
 
@@ -198,10 +198,10 @@ ULPF follows a simple processing pipeline:
 Ingest → Parse → Normalize → Store → Visualize
 ```
 
-### 1️⃣ Ingest
+###  Ingest
 Receives raw, unstructured firewall logs.
 
-### 2️⃣ Parse
+###  Parse
 Uses a custom **regex-based parsing engine** to extract useful fields such as:
 
 - Source IP
@@ -209,18 +209,18 @@ Uses a custom **regex-based parsing engine** to extract useful fields such as:
 - Action
 - Other security indicators
 
-### 3️⃣ Normalize
+###  Normalize
 Converts the extracted information into the **OCSF standard**.
 
-### 4️⃣ Store
+###  Store
 Stores the processed events locally in **SQLite**.
 
-### 5️⃣ Visualize
+###  Visualize
 Grafana provides a real-time dashboard for monitoring and analysis.
 
 ---
 
-## 🎯 MVP Highlights
+##  MVP Highlights
 
 | Feature | Description |
 |---------|-------------|
@@ -233,7 +233,7 @@ Grafana provides a real-time dashboard for monitoring and analysis.
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```text
 ulpf-mvp/
@@ -249,7 +249,7 @@ ulpf-mvp/
 
 ---
 
-# 🚀 Quick Start
+#  Quick Start
 
 For experienced users, the entire setup can be summarized as:
 
@@ -279,7 +279,7 @@ curl -X POST -d "src=192.168.99.99 dstip=1.1.1.1 action=deny" http://localhost:8
 
 ---
 
-## 🧠 Processing Flow
+##  Processing Flow
 
 ```text
 Firewall Log
@@ -305,10 +305,10 @@ Security Visualization
 
 ---
 
-## 🏆 Built For
+##  Built For
 
 **Smart India Hackathon 2026**
 
-### 👨‍💻 Team Hydra 🧠
+###  Team Hydra 
 
 > *Turning raw security logs into structured, actionable intelligence.*
